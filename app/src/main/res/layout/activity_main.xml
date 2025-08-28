@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Semáforo 1 -->
+
         <LinearLayout
             android:orientation="vertical"
             android:gravity="center"
@@ -27,7 +27,7 @@
             <ImageView android:id="@+id/s1Green"  android:layout_width="100dp" android:layout_height="100dp" android:layout_marginTop="8dp" android:src="@drawable/light_off"/>
         </LinearLayout>
 
-        <!-- Semáforo 2 -->
+
         <LinearLayout
             android:orientation="vertical"
             android:gravity="center"
