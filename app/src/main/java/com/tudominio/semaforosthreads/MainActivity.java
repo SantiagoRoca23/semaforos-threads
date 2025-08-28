@@ -9,115 +9,82 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Semáforo 1
+    private ImageView s1Red, s1Yellow, s1Green;
+    // Semáforo 2
+    private ImageView s2Red, s2Yellow, s2Green;
 
-    private ImageView ivUno;
-    private Thread tFase1;
-    private volatile boolean runningFase1 = false;
+    // Hilos
+    private Thread t1, t2;
+    private volatile boolean running1 = false, running2 = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ivUno = findViewById(R.id.ivUno);
-        ivDos = findViewById(R.id.ivDos);
+        s1Red = findViewById(R.id.s1Red);
+        s1Yellow = findViewById(R.id.s1Yellow);
+        s1Green = findViewById(R.id.s1Green);
 
-
+        s2Red = findViewById(R.id.s2Red);
+        s2Yellow = findViewById(R.id.s2Yellow);
+        s2Green = findViewById(R.id.s2Green);
     }
 
-
-
-    // onClick FASE 1
-    public void startFase1(View v) {
-        if (tFase1 != null && tFase1.isAlive()) return; // evita hilos duplicados
-        runningFase1 = true;
-
-        tFase1 = new Thread(new Runnable() {
-            @Override public void run() {
-                boolean on = false;
-                while (runningFase1) {
-                    on = !on;
-                    final boolean finalOn = on;
-                    runOnUiThread(new Runnable() {
-                        @Override public void run() {
-                            ivUno.setImageResource(finalOn ? R.drawable.light_red_on : R.drawable.light_off);
-                        }
-                    });
-                    sleepMs(5000); // 5 seg encendido, 5 seg apagado
+    // ONCLICK FASE 4: cada semáforo enciende 1 color a la vez (5s) y apaga los demás
+    public void startFase4(View v) {
+        if (t1 == null || !t1.isAlive()) {
+            running1 = true;
+            t1 = new Thread(new Runnable() {
+                @Override public void run() {
+                    while (running1) {
+                        setState(1, "RED");    sleepMs(5000);
+                        setState(1, "YELLOW"); sleepMs(5000);
+                        setState(1, "GREEN");  sleepMs(5000);
+                    }
                 }
-            }
-        });
-        tFase1.start();
-    }
+            });
+            t1.start();
+        }
 
-    // Fase 2
-    private Thread tFase2;
-    private volatile boolean runningFase2 = false;
-
-    public void startFase2(View v) {
-        if (tFase2 != null && tFase2.isAlive()) return;
-        runningFase2 = true;
-
-        tFase2 = new Thread(new Runnable() {
-            @Override public void run() {
-                while (runningFase2) {
-                    setSingleColor(R.drawable.light_red_on);    sleepMs(5000);
-                    setSingleColor(R.drawable.light_yellow_on); sleepMs(5000);
-                    setSingleColor(R.drawable.light_green_on);  sleepMs(5000);
+        if (t2 == null || !t2.isAlive()) {
+            running2 = true;
+            t2 = new Thread(new Runnable() {
+                @Override public void run() {
+                    while (running2) {
+                        setState(2, "RED");    sleepMs(5000);
+                        setState(2, "YELLOW"); sleepMs(5000);
+                        setState(2, "GREEN");  sleepMs(5000);
+                    }
                 }
-            }
-        });
-        tFase2.start();
-    }
-    // en onCreate, después de ivUno = ...
-
-
-    // Fase 3
-    private ImageView ivDos;
-    private Thread tFase3;
-    private volatile boolean runningFase3 = false;
-
-    public void startFase3(View v) {
-        if (tFase3 != null && tFase3.isAlive()) return;
-        runningFase3 = true;
-
-        tFase3 = new Thread(new Runnable() {
-            @Override public void run() {
-                while (runningFase3) {
-                    setColor(ivDos, R.drawable.light_red_on);    sleepMs(5000);
-                    setColor(ivDos, R.drawable.light_yellow_on); sleepMs(5000);
-                    setColor(ivDos, R.drawable.light_green_on);  sleepMs(5000);
-                }
-            }
-        });
-        tFase3.start();
+            });
+            t2.start();
+        }
     }
 
-    private void setColor(final ImageView iv, final int drawableId) {
+    private void setState(final int sem, final String color) {
         runOnUiThread(new Runnable() {
             @Override public void run() {
-                iv.setImageResource(drawableId);
+                ImageView r = (sem == 1) ? s1Red : s2Red;
+                ImageView y = (sem == 1) ? s1Yellow : s2Yellow;
+                ImageView g = (sem == 1) ? s1Green : s2Green;
+
+                r.setImageResource(color.equals("RED")    ? R.drawable.light_red_on    : R.drawable.light_off);
+                y.setImageResource(color.equals("YELLOW") ? R.drawable.light_yellow_on : R.drawable.light_off);
+                g.setImageResource(color.equals("GREEN")  ? R.drawable.light_green_on  : R.drawable.light_off);
             }
         });
     }
-
-
-    private void setSingleColor(final int drawableId) {
-        runOnUiThread(new Runnable() {
-            @Override public void run() {
-                ivUno.setImageResource(drawableId);
-            }
-        });
-    }
-
 
     private static void sleepMs(long ms) { try { Thread.sleep(ms); } catch (InterruptedException ignored) {} }
 
     @Override
     protected void onDestroy() {
-        runningFase1 = false;
+        running1 = false; running2 = false;
         super.onDestroy();
     }
 }
+
 
 

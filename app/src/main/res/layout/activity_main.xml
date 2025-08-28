@@ -7,39 +7,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ivUno"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/light_off" />
+    <!-- Contenedor de 2 semáforos lado a lado -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Semáforo 1 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView android:id="@+id/s1Red"    android:layout_width="100dp" android:layout_height="100dp" android:src="@drawable/light_off"/>
+            <ImageView android:id="@+id/s1Yellow" android:layout_width="100dp" android:layout_height="100dp" android:layout_marginTop="8dp" android:src="@drawable/light_off"/>
+            <ImageView android:id="@+id/s1Green"  android:layout_width="100dp" android:layout_height="100dp" android:layout_marginTop="8dp" android:src="@drawable/light_off"/>
+        </LinearLayout>
+
+        <!-- Semáforo 2 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView android:id="@+id/s2Red"    android:layout_width="100dp" android:layout_height="100dp" android:src="@drawable/light_off"/>
+            <ImageView android:id="@+id/s2Yellow" android:layout_width="100dp" android:layout_height="100dp" android:layout_marginTop="8dp" android:src="@drawable/light_off"/>
+            <ImageView android:id="@+id/s2Green"  android:layout_width="100dp" android:layout_height="100dp" android:layout_marginTop="8dp" android:src="@drawable/light_off"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <Button
-        android:id="@+id/btnFase1"
-        android:text="FASE 1: Encender/Apagar"
-        android:onClick="startFase1"
-        android:layout_marginTop="24dp"
+        android:id="@+id/btnFase4"
+        android:text="FASE 4: Exclusión (5s c/u)"
+        android:onClick="startFase4"
+        android:layout_marginTop="18dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/btnFase2"
-        android:text="FASE 2: R->A->V cada 5s"
-        android:onClick="startFase2"
-        android:layout_marginTop="12dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <ImageView
-        android:id="@+id/ivDos"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/light_off" />
-
-    <Button
-        android:id="@+id/btnFase3"
-        android:text="FASE 3: Segundo recurso"
-        android:onClick="startFase3"
-        android:layout_marginTop="12dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
 </LinearLayout>
