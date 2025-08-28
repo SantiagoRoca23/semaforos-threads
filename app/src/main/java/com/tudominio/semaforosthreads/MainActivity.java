@@ -1,24 +1,55 @@
 package com.tudominio.semaforosthreads;
 
-import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+
+
+    private ImageView ivUno;
+    private Thread tFase1;
+    private volatile boolean runningFase1 = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        ivUno = findViewById(R.id.ivUno);
+    }
+
+    // onClick FASE 1
+    public void startFase1(View v) {
+        if (tFase1 != null && tFase1.isAlive()) return; // evita hilos duplicados
+        runningFase1 = true;
+
+        tFase1 = new Thread(new Runnable() {
+            @Override public void run() {
+                boolean on = false;
+                while (runningFase1) {
+                    on = !on;
+                    final boolean finalOn = on;
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            ivUno.setImageResource(finalOn ? R.drawable.light_red_on : R.drawable.light_off);
+                        }
+                    });
+                    sleepMs(5000); // 5 seg encendido, 5 seg apagado
+                }
+            }
         });
+        tFase1.start();
+    }
+
+    private static void sleepMs(long ms) { try { Thread.sleep(ms); } catch (InterruptedException ignored) {} }
+
+    @Override
+    protected void onDestroy() {
+        runningFase1 = false;
+        super.onDestroy();
     }
 }
