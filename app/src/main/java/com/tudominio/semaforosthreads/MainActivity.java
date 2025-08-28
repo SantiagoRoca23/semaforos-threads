@@ -45,6 +45,35 @@ public class MainActivity extends AppCompatActivity {
         tFase1.start();
     }
 
+    // Fase 2
+    private Thread tFase2;
+    private volatile boolean runningFase2 = false;
+
+    public void startFase2(View v) {
+        if (tFase2 != null && tFase2.isAlive()) return;
+        runningFase2 = true;
+
+        tFase2 = new Thread(new Runnable() {
+            @Override public void run() {
+                while (runningFase2) {
+                    setSingleColor(R.drawable.light_red_on);    sleepMs(5000);
+                    setSingleColor(R.drawable.light_yellow_on); sleepMs(5000);
+                    setSingleColor(R.drawable.light_green_on);  sleepMs(5000);
+                }
+            }
+        });
+        tFase2.start();
+    }
+
+    private void setSingleColor(final int drawableId) {
+        runOnUiThread(new Runnable() {
+            @Override public void run() {
+                ivUno.setImageResource(drawableId);
+            }
+        });
+    }
+
+
     private static void sleepMs(long ms) { try { Thread.sleep(ms); } catch (InterruptedException ignored) {} }
 
     @Override
@@ -53,3 +82,5 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
+
+
