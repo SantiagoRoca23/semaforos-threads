@@ -20,7 +20,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ivUno = findViewById(R.id.ivUno);
+        ivDos = findViewById(R.id.ivDos);
+
+
     }
+
+
 
     // onClick FASE 1
     public void startFase1(View v) {
@@ -64,6 +69,38 @@ public class MainActivity extends AppCompatActivity {
         });
         tFase2.start();
     }
+    // en onCreate, después de ivUno = ...
+
+
+    // Fase 3
+    private ImageView ivDos;
+    private Thread tFase3;
+    private volatile boolean runningFase3 = false;
+
+    public void startFase3(View v) {
+        if (tFase3 != null && tFase3.isAlive()) return;
+        runningFase3 = true;
+
+        tFase3 = new Thread(new Runnable() {
+            @Override public void run() {
+                while (runningFase3) {
+                    setColor(ivDos, R.drawable.light_red_on);    sleepMs(5000);
+                    setColor(ivDos, R.drawable.light_yellow_on); sleepMs(5000);
+                    setColor(ivDos, R.drawable.light_green_on);  sleepMs(5000);
+                }
+            }
+        });
+        tFase3.start();
+    }
+
+    private void setColor(final ImageView iv, final int drawableId) {
+        runOnUiThread(new Runnable() {
+            @Override public void run() {
+                iv.setImageResource(drawableId);
+            }
+        });
+    }
+
 
     private void setSingleColor(final int drawableId) {
         runOnUiThread(new Runnable() {
