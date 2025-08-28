@@ -43,7 +43,7 @@
 
     <Button
         android:id="@+id/btnFase4"
-        android:text="FASE 4: Exclusión (5s c/u)"
+        android:text="Fase 5: Dos semáforos en paralelo (Threads independientes)"
         android:onClick="startFase4"
         android:layout_marginTop="18dp"
         android:layout_width="wrap_content"
